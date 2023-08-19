@@ -1,0 +1,42 @@
+Simulation Sandbox v2 requirements & considerations:
+
+* better separate game logic and gui (Implement MVC?)
+* colors tied to lifeform upon creation
+
+Interactivity:
+	Grab
+	Zoom (in/out)
+	Brushes (adjustable radius):
+	 * Add life (solid)
+	 * Add life (random)
+	   * Randomness density
+	 * Remove life (solid)
+	 * Remove life + decayed (solid)
+	Pause/resume board
+	Clear board (with warning)
+	Save board (as JSON / as account state)
+	Load board (from JSON)
+	Screenshot board
+	Record evolution
+
+
+New life (provide option for templates - 1D + direction, conway's, etc):
+	* Name
+	* Color
+	* MultiplySpeed [1-10] (subtracts internal ticks between generations (10) by this number)
+	Conditions:
+		Pauses main game, opens new empty grid
+		Condition group ([add new condition group] button)
+			* ignoreLifeforms: [all (default) || none || select [a, b, c, ...]] (select from a list of created or template lifeforms to ignore in the spread strategy)
+	Spread:
+		* use condition: (select from existing conditions)
+		Spread group ([add new spread group] button):
+			* newCellStrength: 100 (sets the cell's strength when spawned in this way; compares the strength of the cell of this lifeform that wants to spawn in a tile with the strength of the cell of another lifeform that wants to spawn in the same tile, allows the cell with the larger strength to spawn, and subtracts its health from the health of the one that didn't spawn)
+			* bool: isActive (determines if brush will place tiles of this group; only one group can be active at a time)
+			* color (cannot be changed, used as label)
+			* chance: 100% (the chance that a new life will appear in the selected tile(s) if the condition is met, slider [0%-100%])
+			* sproutInGenerations: 1 (the number of this species' generations it takes for the new life to be realized, one is the next generation)
+
+
+
+** caution: because strength requires comparison of lifeforms that want to spawn, before spawning the next generation we must check all the cells that want to spawn in a tile and make sure only the strongest lifeform can spawn, before subtracting the strength of all the instances of that lifeform that want to spawn there from the strength of all other competing lifeforms
