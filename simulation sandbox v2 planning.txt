@@ -27,10 +27,13 @@ New life (provide option for templates - 1D + direction, conway's, etc):
 	Conditions:
 		Pauses main game, opens new empty grid
 		Condition group ([add new condition group] button)
+			* positions []
+			* color (cannot be changed, use as label)
 			* ignoreLifeforms: [all (default) || none || select [a, b, c, ...]] (select from a list of created or template lifeforms to ignore in the spread strategy)
 	Spread:
 		* use condition: (select from existing conditions)
 		Spread group ([add new spread group] button):
+			* positions []
 			* newCellStrength: 100 (sets the cell's strength when spawned in this way; compares the strength of the cell of this lifeform that wants to spawn in a tile with the strength of the cell of another lifeform that wants to spawn in the same tile, allows the cell with the larger strength to spawn, and subtracts its health from the health of the one that didn't spawn)
 			* bool: isActive (determines if brush will place tiles of this group; only one group can be active at a time)
 			* color (cannot be changed, used as label)
