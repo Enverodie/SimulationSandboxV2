@@ -1,4 +1,4 @@
-export enum Equality { LESSTHAN, LESSTHAN_EQUALTO, EQUALTO, GREATERTHAN_EQUALTO, GREATERTHAN };
+export enum Equality { LESSTHAN, LESSTHAN_EQUALTO, EQUALTO, GREATERTHAN_EQUALTO, GREATERTHAN, BETWEEN_INCLUSIVE };
 
 // this determines the DEFAULT amount of ticks for a normal lifeform to wait before moving to the next generation
 export const TICKS_BETWEEN_GENERATIONS = 256;

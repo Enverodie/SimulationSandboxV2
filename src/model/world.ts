@@ -8,6 +8,7 @@ export type CellEventLog = { coord:Coordinate, tickOnEvent:number, event:CellEve
 export default class World {
 
     name: string;
+    worldTick: number; // TODO: Use this!
     spanX: number;
     spanY: number;
     generation: Positions<Cell>;
@@ -48,13 +49,14 @@ export default class World {
                 strongest.strength -= subtractedStrength;
                 if (strongest.strength > 0) this.nextGeneration.addPosition(Positions.getCoordinateFromKey(k), strongest);
             }
-            else this.nextGeneration.addPosition(Positions.getCoordinateFromKey(k), nextGenerationPrep.positions[k][0])
+            else this.nextGeneration.addPosition(Positions.getCoordinateFromKey(k), nextGenerationPrep.positions[k][0]);
         }
     }
 
     pushNewGeneration() {
         this.generation = this.nextGeneration;
         this.nextGeneration = new Positions<Cell>(this);
+        this.worldTick++;
     }
 
     /**
@@ -70,6 +72,7 @@ export default class World {
      */
     constructor(name: string, spanX: number = Infinity, spanY: number = Infinity, positions: Positions<Cell> | undefined) {
         this.name = name;
+        this.worldTick = 0;
         this.spanX = Math.min(Math.max(spanX, MIN_WORLD_SPAN), MAX_WORLD_SPAN);
         this.spanY = Math.min(Math.max(spanY, MIN_WORLD_SPAN), MAX_WORLD_SPAN);
         this.generation = positions || new Positions<Cell>(this);

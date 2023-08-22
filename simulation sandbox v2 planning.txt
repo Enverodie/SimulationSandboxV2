@@ -43,3 +43,12 @@ New life (provide option for templates - 1D + direction, conway's, etc):
 
 
 ** caution: because strength requires comparison of lifeforms that want to spawn, before spawning the next generation we must check all the cells that want to spawn in a tile and make sure only the strongest lifeform can spawn, before subtracting the strength of all the instances of that lifeform that want to spawn there from the strength of all other competing lifeforms
+
+    /*
+    * If I have two objects, one has all the keys I want and the other is a superset, can I get the values of the superset
+    * quickly, based on the keys I have in the first object?
+    * 
+    * Other note:
+    * The way this algorithm works, ignoring other lifeforms DECREASES complexity significantly 
+    * by stopping the filtering algorithm if it is a certain type
+    */

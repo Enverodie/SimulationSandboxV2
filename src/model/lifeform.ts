@@ -4,13 +4,68 @@ import Positions from "./positions";
 
 
 // Conditions
+
+/**
+ * Stores a set of conditions designed to evaluate as quickly as possible
+ */
+export class ComplexRange {
+
+    private conditions:([Equality, [number, number|void]])[] = [];
+
+    // NOTE: if anything could use optimizing later, the way these conditions are sorted is one place to look.
+
+    private evaluateAliveCondition(input:number, condition:[Equality, [number, number|void]]): boolean {
+        let [operator, numbers] = condition;
+        switch(operator) {
+            case Equality.LESSTHAN:
+                return input < numbers[0];
+            case Equality.LESSTHAN_EQUALTO:
+                return input <= numbers[0];
+            case Equality.EQUALTO:
+                return input === numbers[0];
+            case Equality.GREATERTHAN_EQUALTO:
+                return input >= numbers[0];
+            case Equality.GREATERTHAN:
+                return input > numbers[0];
+            case Equality.BETWEEN_INCLUSIVE:
+                if (typeof numbers[1] !== 'undefined') {
+                    let number1 = numbers[1] as number;
+                    return (input <= numbers[0] && input >= number1);
+                }
+                console.error("Improper use of addAliveCondition method: no argument provided for right operand in numbers arg");
+                return false;
+            default:
+                console.error("No alive condition can be established with operator " + operator);
+                return false;
+        }
+    }
+
+    /**
+     * Prepares the conditions in a proposition relating to the number of cells that should be alive
+     * @param operator A logical operator to compare a future input against
+     * @param numbers The operands to use from left to right; one if operator requires two operands, two if operator requires three
+     */
+    addAliveCondition(operator:Equality, numbers:[number, number|void]): void {
+        this.conditions.push([operator, numbers]);
+    }
+
+    /**
+     * Check if a provided number is in any of the ranges previously provided.
+     * @param number The number to test
+     * @returns true if the value meets any of the conditions
+     */
+    isWithin(number:number): boolean {
+        // make this function execute as fast as possible.
+        for (let condition of this.conditions) if (this.evaluateAliveCondition(number, condition)) return true;
+        return false;
+    }
+}
+
 export enum IgnoreLifeformOptions { ALL, NONE };
 export class Lifeform_SpreadCondition {
     
-    isActive: boolean;
-    positions: Positions<number>;
-    numAliveInPositions: number;
-    numAliveOperator: Equality;
+    positions: Positions<boolean>;
+    amountRequiredAlive: ComplexRange;
     color: Color;
     ignoreLifeforms: IgnoreLifeformOptions.ALL | IgnoreLifeformOptions.NONE | Lifeform[];
     
@@ -20,11 +75,9 @@ export class Lifeform_SpreadCondition {
      * @param color the color this condition will display as
      * @param ignoreLifeforms a list of all the lifeforms this condition will ignore
      */
-    constructor(positions: Positions<number>, color: Color, numAliveInPositions:number, numAliveOperator:Equality, ignoreLifeforms: IgnoreLifeformOptions.ALL | IgnoreLifeformOptions.NONE | Lifeform[]) {
-        this.isActive = false;
+    constructor(positions: Positions<boolean>, color: Color, amountRequiredAlive:ComplexRange, ignoreLifeforms: IgnoreLifeformOptions.ALL | IgnoreLifeformOptions.NONE | Lifeform[]) {
         this.positions = positions;
-        this.numAliveInPositions = numAliveInPositions;
-        this.numAliveOperator = numAliveOperator;
+        this.amountRequiredAlive = amountRequiredAlive;
         this.color = color;
         this.ignoreLifeforms = ignoreLifeforms;
     }
@@ -35,9 +88,8 @@ export class Lifeform_SpreadCondition {
 // Spread
 export class Lifeform_SpreadStrategy {
     
-    isActive: boolean;
     conditions: Lifeform_SpreadCondition[];
-    positions: Positions<number>;
+    positions: Positions<boolean>;
     color: Color;
     newCellStrength: number;
     chance: number;
@@ -52,8 +104,7 @@ export class Lifeform_SpreadStrategy {
      * @param chance the decimal chance a cell will spread to any given position for each position - must be between [0, 1]
      * @param sproutInGenerations the number of this lifeform's generations it takes for the new life to be realized, one is the next generation
      */
-    constructor(conditions: Lifeform_SpreadCondition[], positions: Positions<number>, color: Color, newCellStrength: number | undefined, chance: number | undefined, sproutInGenerations: number | undefined) {
-        this.isActive = false;
+    constructor(conditions: Lifeform_SpreadCondition[], positions: Positions<boolean>, color: Color, newCellStrength: number | undefined, chance: number | undefined, sproutInGenerations: number | undefined) {
         this.conditions = conditions;
         this.positions = positions;
         this.color = color;
@@ -61,8 +112,8 @@ export class Lifeform_SpreadStrategy {
         this.newCellStrength = Math.max((newCellStrength || 100), 1);
         if (typeof chance !== 'undefined' && (chance > 1 || chance < 0)) console.warn("Error in Lifeform_SpreadStrategy constructor: argument to 'chance' not in range [0,1]. Closest value inserted.")
         this.chance = Math.min(Math.max((chance || 1), 0), 1);
-        if (typeof sproutInGenerations !== 'undefined' && (sproutInGenerations < 1)) console.warn("Error in Lifeform_SpreadStrategy constructor: argument to 'sproutInGenerations' not in range [1,n). Closest value inserted.")
-        this.sproutInGenerations = Math.min(Math.round(sproutInGenerations || 1), 1);
+        if (typeof sproutInGenerations !== 'undefined' && (sproutInGenerations < 0)) console.warn("Error in Lifeform_SpreadStrategy constructor: argument to 'sproutInGenerations' not in range [0,n). Closest value inserted.")
+        this.sproutInGenerations = Math.min(Math.round(sproutInGenerations || 0), 0);
     }
     
 };
@@ -72,7 +123,6 @@ export default class Lifeform {
     name: string;
     color: Color;
     ticksBetweenGenerations: number;
-    spreadConditions: Lifeform_SpreadCondition[];
     spreadStrategies: Lifeform_SpreadStrategy[];
 
     /**
@@ -80,10 +130,9 @@ export default class Lifeform {
      * @param color The css color the lifeform should be rendered with
      * @param multiplySpeed The speed at which the lifeform advances to the next generation, where 0 is the default
      */
-    constructor(name:string, color:Color, spreadConditions:Lifeform_SpreadCondition[], spreadStrategies:Lifeform_SpreadStrategy[], multiplySpeed: number | undefined) {
+    constructor(name:string, color:Color, spreadStrategies:Lifeform_SpreadStrategy[], multiplySpeed: number | undefined) {
         this.name = name;
         this.color = color;
-        this.spreadConditions = spreadConditions;
         this.spreadStrategies = spreadStrategies;
         this.ticksBetweenGenerations = TICKS_BETWEEN_GENERATIONS - (multiplySpeed || 0);
     }

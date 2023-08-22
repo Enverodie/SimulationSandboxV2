@@ -10,15 +10,24 @@ export default class Cell {
     ticksUntilSprout: number;
 
     stageNextGeneration(coord:Coordinate, stagingArea:Positions<Cell[]>) { // TODO: Finish this method
-        this.ticksUntilNextGeneration--; // reset once zero
-        this.ticksUntilSprout--;
-        if (this.ticksUntilSprout <= 0) { // add this cell to the pool
-
-            if (this.ticksUntilNextGeneration === 0) { // add all cells that meet all the criteria to the pool
-
-            }
+        if (this.ticksUntilSprout === 0) { // happy birthday!
+            // add this cell to the pool
+            stagingArea.getPosition(coord)?.push(this);
         }
-        if (this.ticksUntilNextGeneration === 0) this.ticksUntilNextGeneration = this.lifeform.ticksBetweenGenerations;
+        else if (this.ticksUntilSprout < 0) { // is alive
+            if (this.ticksUntilNextGeneration > 0) { 
+                // the cell only potentially dies when the next generation begins
+                stagingArea.getPosition(coord)?.push(this);
+            }
+            else if (this.ticksUntilNextGeneration === 0) { // the next generation is ready to be born
+                // add all cells that meet all the criteria to the pool
+                
+            }
+            if (this.ticksUntilNextGeneration === 0) this.ticksUntilNextGeneration = this.lifeform.ticksBetweenGenerations;
+            // ^ it's potentially unlikely that this cell will survive to the next generation, but it's still a good idea to reset it
+            this.ticksUntilNextGeneration--; // reset once zero
+        }
+        this.ticksUntilSprout--;
     }
 
     /**
@@ -28,12 +37,13 @@ export default class Cell {
      * will attempt to do so.
      * @param lifeform The cell's style of living
      * @param strength the power the cell has to remain in position until the next generation even with competition
-     * @param sproutInGenerations the number of generations to wait before the cell comes to life
+     * @param sproutInGenerations the number of generations to wait before the cell comes to life, where 0 is it will come to life the next chance it gets. Cannot be < 0
      */
     constructor(lifeform: Lifeform, strength:number = DEFAULT_STARTER_STRENGTH, sproutInGenerations:number = DEFAULT_TIME_TO_SPROUT) {
         this.lifeform = lifeform;
         this.strength = strength;
         this.ticksUntilNextGeneration = this.lifeform.ticksBetweenGenerations;
-        this.ticksUntilSprout = sproutInGenerations;
+        if (sproutInGenerations < 0) console.warn("Error in Cell constructor: argument to 'sproutInGenerations' not in range [0,n). Closest value inserted.")
+        this.ticksUntilSprout = Math.max(sproutInGenerations, 0);
     }
 }
