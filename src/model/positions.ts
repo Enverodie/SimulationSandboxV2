@@ -10,12 +10,12 @@ export default class Positions<T> {
      * that you run any coordinate pair through this function before looking up
      * the key in the positions dictionary.
      */
-    static formatPosition(coord:Coordinate): string {
+    protected static formatPosition(coord:Coordinate): string {
         let { x, y } = coord;
         return `x${x}y${y}`;
     }
 
-    static getCoordinateFromKey(k: string): Coordinate {
+    protected static getCoordinateFromKey(k: string): Coordinate {
         let split = k.split('x')[1].split('y');
         let x = parseInt(split[0]);
         let y = parseInt(split[1]);
@@ -30,7 +30,7 @@ export default class Positions<T> {
         return {x, y};
     }
 
-    positions: { [key: string]: T };
+    private positions: { [key: string]: T };
     world: World|undefined; // we're allowing the world to be undefined as if the positions in such an object just exist in the aether
 
     positionIsOccupied(coord:Coordinate): boolean {
@@ -83,6 +83,18 @@ export default class Positions<T> {
     getPosition(coord:Coordinate): T | null {
         if (this.positionIsOccupied(coord)) return this.positions[Positions.formatPosition(coord)];
         else return null;
+    }
+
+    getAllPositions(): [key:Coordinate, value:T][] {
+        return Object.entries(this.positions).map(([key, value]) => [Positions.getCoordinateFromKey(key), value]);
+    }
+
+    getAllKeys(): Coordinate[] {
+        return Object.keys(this.positions).map(key => Positions.getCoordinateFromKey(key));
+    }
+
+    getAllValues(): T[] {
+        return Object.values(this.positions);
     }
 
     /**

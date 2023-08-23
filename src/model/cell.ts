@@ -1,5 +1,5 @@
 import { DEFAULT_STARTER_STRENGTH, DEFAULT_TIME_TO_SPROUT } from "./globalVars";
-import Lifeform from "./lifeform";
+import Lifeform, { IgnoreLifeformOptions } from "./lifeform";
 import Positions, { Coordinate } from "./positions";
 
 export default class Cell {
@@ -9,7 +9,11 @@ export default class Cell {
     ticksUntilNextGeneration: number;
     ticksUntilSprout: number;
 
-    stageNextGeneration(coord:Coordinate, stagingArea:Positions<Cell[]>) { // TODO: Finish this method
+    static getCoordinateWithOffset(coord:Coordinate, offset:Coordinate): Coordinate {
+        return { x: coord.x + offset.x, y: coord.y + offset.y };
+    }
+
+    async stageNextGeneration(coord:Coordinate, stagingArea:Positions<Cell[]>, currentGen:Positions<Cell>) { // TODO: Finish this method
         if (this.ticksUntilSprout === 0) { // happy birthday!
             // add this cell to the pool
             stagingArea.getPosition(coord)?.push(this);
@@ -21,7 +25,33 @@ export default class Cell {
             }
             else if (this.ticksUntilNextGeneration === 0) { // the next generation is ready to be born
                 // add all cells that meet all the criteria to the pool
-                
+                for (let strategy of this.lifeform.spreadStrategies) {
+                    let condition = strategy.condition;
+                    let localNeighborhood = condition.positions.getAllKeys();
+                    let absoluteNeighborhood = localNeighborhood.map(localCoord => {return {x: coord.x + localCoord.x, y: coord.y + localCoord.y}})
+                    for (let absoluteNeighborhoodPosition of absoluteNeighborhood) {
+                        let qualifyingCells: Cell[] = [];
+                        for (let testedPosition of localNeighborhood) {
+                            let cellAtCheckedPosition = currentGen.getPosition(Cell.getCoordinateWithOffset(absoluteNeighborhoodPosition, testedPosition));
+                            if (cellAtCheckedPosition === null) continue;
+
+                            // if ignoring every other lifeform
+                            let isCorrectLifeform:boolean = condition.ignoreLifeforms === IgnoreLifeformOptions.ALL && cellAtCheckedPosition.lifeform.name === this.lifeform.name;
+
+                            // if ignoring only some lifeforms
+                            isCorrectLifeform = isCorrectLifeform || (Array.isArray(condition.ignoreLifeforms) && condition.ignoreLifeforms[0] instanceof Lifeform && !(condition.ignoreLifeforms as Lifeform[]).some((value) => value.name === (cellAtCheckedPosition as Cell).lifeform.name));
+
+                            if (isCorrectLifeform) qualifyingCells.push(cellAtCheckedPosition);
+                        }
+                        if (condition.amountRequiredAlive.isWithin(qualifyingCells.length)) {
+                            for (let strategyPosition of strategy.positions.getAllKeys()) {
+                                let spot = stagingArea.getPosition(Cell.getCoordinateWithOffset(absoluteNeighborhoodPosition, strategyPosition));
+                                if (spot === null) spot = [];
+                                spot.push(new Cell(this.lifeform, strategy.newCellStrength, strategy.sproutInGenerations));
+                            }
+                        }
+                    }
+                }
             }
             if (this.ticksUntilNextGeneration === 0) this.ticksUntilNextGeneration = this.lifeform.ticksBetweenGenerations;
             // ^ it's potentially unlikely that this cell will survive to the next generation, but it's still a good idea to reset it

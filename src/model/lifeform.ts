@@ -88,7 +88,7 @@ export class Lifeform_SpreadCondition {
 // Spread
 export class Lifeform_SpreadStrategy {
     
-    conditions: Lifeform_SpreadCondition[];
+    condition: Lifeform_SpreadCondition;
     positions: Positions<boolean>;
     color: Color;
     newCellStrength: number;
@@ -97,15 +97,15 @@ export class Lifeform_SpreadStrategy {
     
     /**
      * SpreadStrategy contains all the information relating to ONE way a lifeform can continue to the next generation
-     * @param conditions The set of conditions necessary for this spread strategy to take effect
+     * @param condition The condition necessary for this spread strategy to take effect
      * @param positions the positions this spread strategy applies to
      * @param color the color this spread strategy will display as
      * @param newCellStrength the determining factor for which of a set of competing cells gets to spawn in a position - must be > 0
      * @param chance the decimal chance a cell will spread to any given position for each position - must be between [0, 1]
      * @param sproutInGenerations the number of this lifeform's generations it takes for the new life to be realized, one is the next generation
      */
-    constructor(conditions: Lifeform_SpreadCondition[], positions: Positions<boolean>, color: Color, newCellStrength: number | undefined, chance: number | undefined, sproutInGenerations: number | undefined) {
-        this.conditions = conditions;
+    constructor(condition: Lifeform_SpreadCondition, positions: Positions<boolean>, color: Color, newCellStrength: number | undefined, chance: number | undefined, sproutInGenerations: number | undefined) {
+        this.condition = condition;
         this.positions = positions;
         this.color = color;
         if (typeof newCellStrength !== 'undefined' && newCellStrength <= 0) console.warn("Error in Lifeform_SpreadStrategy constructor: argument to 'newCellStrength' cannot be <= 0. Using value 1.");

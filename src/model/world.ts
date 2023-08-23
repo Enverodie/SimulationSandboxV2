@@ -18,20 +18,18 @@ export default class World {
     cellDeceasedLog: CellEventLog[];
     // TODO: incorporate the logs with the corresponding events
     
-    stageNextGeneration() {
+    async stageNextGeneration() {
         let nextGenerationPrep = new Positions<Cell[]>(this);
-        for (let k in this.generation.positions) {
-            let cell = this.generation.positions[k];
-            let coord:Coordinate = Positions.getCoordinateFromKey(k);
-            nextGenerationPrep.positions[k] = [];
-            cell.stageNextGeneration(coord, nextGenerationPrep);
+        for (let [coord, cell] of this.generation.getAllPositions()) {
+            nextGenerationPrep.addPosition(coord, []);
+            cell.stageNextGeneration(coord, nextGenerationPrep, this.generation);
         }
         // find all duplicates and calculate best
-        for (let k in nextGenerationPrep.positions) {
-            if (nextGenerationPrep.positions[k].length > 1) { // multiple cells competing for the same spot
+        for (let [cellArrayCoord, nextGenCellArray] of nextGenerationPrep.getAllPositions()) {
+            if (nextGenCellArray.length > 1) {
                 let competingLifeforms: {[key: string]: number} = {};
-                let c:Cell, strongest:Cell = nextGenerationPrep.positions[k][0];
-                for (c of nextGenerationPrep.positions[k]) {
+                let strongest:Cell = nextGenCellArray[0];
+                for (let c of nextGenCellArray) {
                     // find the strongest cell, then subtract the strengths of all that 
                     // if (typeof competingLifeforms[c.lifeform.name] === 'undefined') competingLifeforms[c.lifeform.name] = 0; // re-enable this if things break
                     competingLifeforms[c.lifeform.name] += c.strength;
@@ -44,12 +42,12 @@ export default class World {
                     // TODO: Test this
                     strongest.strength += currValue; // since lifeform is the same, consolidate strength
                     return prev;
-                }, 0)
+                }, 0);
                 strongest.strength -= initialStrongestStrength; // this is because we added it to itself in the prior loop
                 strongest.strength -= subtractedStrength;
-                if (strongest.strength > 0) this.nextGeneration.addPosition(Positions.getCoordinateFromKey(k), strongest);
+                if (strongest.strength > 0) this.nextGeneration.addPosition(cellArrayCoord, strongest);
             }
-            else this.nextGeneration.addPosition(Positions.getCoordinateFromKey(k), nextGenerationPrep.positions[k][0]);
+            else this.nextGeneration.addPosition(cellArrayCoord, nextGenCellArray[0]);
         }
     }
 
