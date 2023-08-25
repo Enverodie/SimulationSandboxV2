@@ -45,8 +45,9 @@ export class ComplexRange {
      * @param operator A logical operator to compare a future input against
      * @param numbers The operands to use from left to right; one if operator requires two operands, two if operator requires three
      */
-    addAliveCondition(operator:Equality, numbers:[number, number|void]): void {
+    addAliveCondition(operator:Equality, numbers:[number, number|void]): ComplexRange {
         this.conditions.push([operator, numbers]);
+        return this;
     }
 
     /**

@@ -18,7 +18,7 @@ export default class World {
     cellDeceasedLog: CellEventLog[];
     // TODO: incorporate the logs with the corresponding events
     
-    async stageNextGeneration() {
+    stageNextGeneration() {
         let nextGenerationPrep = new Positions<Cell[]>(this);
         for (let [coord, cell] of this.generation.getAllPositions()) {
             nextGenerationPrep.addPosition(coord, []);
@@ -68,11 +68,11 @@ export default class World {
      * @param spanY The amount the world will span in either vertical direction
      * @param positions use this to predefine a set of cells for the world
      */
-    constructor(name: string, spanX: number = Infinity, spanY: number = Infinity, positions: Positions<Cell> | undefined) {
+    constructor(name: string, spanX: number|void = Infinity, spanY: number|void = Infinity, positions: Positions<Cell> | void) {
         this.name = name;
         this.worldTick = 0;
-        this.spanX = Math.min(Math.max(spanX, MIN_WORLD_SPAN), MAX_WORLD_SPAN);
-        this.spanY = Math.min(Math.max(spanY, MIN_WORLD_SPAN), MAX_WORLD_SPAN);
+        this.spanX = Math.min(Math.max((spanX as number), MIN_WORLD_SPAN), MAX_WORLD_SPAN);
+        this.spanY = Math.min(Math.max((spanY as number), MIN_WORLD_SPAN), MAX_WORLD_SPAN);
         this.generation = positions || new Positions<Cell>(this);
         this.nextGeneration = new Positions<Cell>(this);
         this.generation.world = this;
