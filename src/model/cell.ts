@@ -13,15 +13,17 @@ export default class Cell {
         return { x: coord.x + offset.x, y: coord.y + offset.y };
     }
 
-    async stageNextGeneration(coord:Coordinate, stagingArea:Positions<Cell[]>, currentGen:Positions<Cell>) { // TODO: Finish this method
+    stageNextGeneration(coord:Coordinate, stagingArea:Positions<Cell[]>, currentGen:Positions<Cell>): void { // TODO: Finish this method
         if (this.ticksUntilSprout === 0) { // happy birthday!
             // add this cell to the pool
-            stagingArea.getPosition(coord)?.push(this);
+            if (stagingArea.getPosition(coord) === null) stagingArea.addPosition(coord, []);
+            (stagingArea.getPosition(coord) as Cell[]).push(this);
         }
         else if (this.ticksUntilSprout < 0) { // is alive
             if (this.ticksUntilNextGeneration > 0) { 
                 // the cell only potentially dies when the next generation begins
-                stagingArea.getPosition(coord)?.push(this);
+                if (stagingArea.getPosition(coord) === null) stagingArea.addPosition(coord, []);
+                (stagingArea.getPosition(coord) as Cell[]).push(this);
             }
             else if (this.ticksUntilNextGeneration === 0) { // the next generation is ready to be born
                 // add all cells that meet all the criteria to the pool
@@ -30,24 +32,26 @@ export default class Cell {
                     let localNeighborhood = condition.positions.getAllKeys();
                     let absoluteNeighborhood = localNeighborhood.map(localCoord => {return {x: coord.x + localCoord.x, y: coord.y + localCoord.y}})
                     for (let absoluteNeighborhoodPosition of absoluteNeighborhood) {
-                        let qualifyingCells: Cell[] = [];
+                        let qualifyingCells = 0;
                         for (let testedPosition of localNeighborhood) {
                             let cellAtCheckedPosition = currentGen.getPosition(Cell.getCoordinateWithOffset(absoluteNeighborhoodPosition, testedPosition));
                             if (cellAtCheckedPosition === null) continue;
 
+                            let isCorrectLifeform:boolean = condition.ignoreLifeforms === IgnoreLifeformOptions.NONE;
+
                             // if ignoring every other lifeform
-                            let isCorrectLifeform:boolean = condition.ignoreLifeforms === IgnoreLifeformOptions.ALL && cellAtCheckedPosition.lifeform.name === this.lifeform.name;
+                            isCorrectLifeform = isCorrectLifeform || condition.ignoreLifeforms === IgnoreLifeformOptions.ALL && cellAtCheckedPosition.lifeform.name === this.lifeform.name;
 
                             // if ignoring only some lifeforms
                             isCorrectLifeform = isCorrectLifeform || (Array.isArray(condition.ignoreLifeforms) && condition.ignoreLifeforms[0] instanceof Lifeform && !(condition.ignoreLifeforms as Lifeform[]).some((value) => value.name === (cellAtCheckedPosition as Cell).lifeform.name));
 
-                            if (isCorrectLifeform) qualifyingCells.push(cellAtCheckedPosition);
+                            if (isCorrectLifeform) qualifyingCells++;
                         }
-                        if (condition.amountRequiredAlive.isWithin(qualifyingCells.length)) {
+                        if (condition.amountRequiredAlive.isWithin(qualifyingCells)) {
                             for (let strategyPosition of strategy.positions.getAllKeys()) {
-                                let spot = stagingArea.getPosition(Cell.getCoordinateWithOffset(absoluteNeighborhoodPosition, strategyPosition));
-                                if (spot === null) spot = [];
-                                spot.push(new Cell(this.lifeform, strategy.newCellStrength, strategy.sproutInGenerations));
+                                let newCoordinate = Cell.getCoordinateWithOffset(absoluteNeighborhoodPosition, strategyPosition);
+                                if (stagingArea.getPosition(newCoordinate) === null) stagingArea.addPosition(newCoordinate, []);
+                                (stagingArea.getPosition(newCoordinate) as Cell[]).push(new Cell(this.lifeform, strategy.newCellStrength, strategy.sproutInGenerations));
                             }
                         }
                     }
