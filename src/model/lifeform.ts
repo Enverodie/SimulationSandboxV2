@@ -1,4 +1,3 @@
-import { Color } from "./colors";
 import { Equality, TICKS_BETWEEN_GENERATIONS } from "./globalVars";
 import Positions from "./positions";
 
@@ -67,7 +66,6 @@ export class Lifeform_SpreadCondition {
     
     positions: Positions<boolean>;
     amountRequiredAlive: ComplexRange;
-    color: Color;
     ignoreLifeforms: IgnoreLifeformOptions.ALL | IgnoreLifeformOptions.NONE | Lifeform[];
     
     /**
@@ -76,10 +74,9 @@ export class Lifeform_SpreadCondition {
      * @param color the color this condition will display as
      * @param ignoreLifeforms a list of all the lifeforms this condition will ignore
      */
-    constructor(positions: Positions<boolean>, color: Color, amountRequiredAlive:ComplexRange, ignoreLifeforms: IgnoreLifeformOptions.ALL | IgnoreLifeformOptions.NONE | Lifeform[]) {
+    constructor(positions: Positions<boolean>, amountRequiredAlive:ComplexRange, ignoreLifeforms: IgnoreLifeformOptions.ALL | IgnoreLifeformOptions.NONE | Lifeform[]) {
         this.positions = positions;
         this.amountRequiredAlive = amountRequiredAlive;
-        this.color = color;
         this.ignoreLifeforms = ignoreLifeforms;
     }
     
@@ -91,7 +88,6 @@ export class Lifeform_SpreadStrategy {
     
     condition: Lifeform_SpreadCondition;
     positions: Positions<boolean>;
-    color: Color;
     newCellStrength: number;
     chance: number;
     sproutInGenerations: number;
@@ -105,10 +101,9 @@ export class Lifeform_SpreadStrategy {
      * @param chance the decimal chance a cell will spread to any given position for each position - must be between [0, 1]
      * @param sproutInGenerations the number of this lifeform's generations it takes for the new life to be realized, one is the next generation
      */
-    constructor(condition: Lifeform_SpreadCondition, positions: Positions<boolean>, color: Color, newCellStrength: number | undefined, chance: number | undefined, sproutInGenerations: number | undefined) {
+    constructor(condition: Lifeform_SpreadCondition, positions: Positions<boolean>, newCellStrength: number | undefined, chance: number | undefined, sproutInGenerations: number | undefined) {
         this.condition = condition;
         this.positions = positions;
-        this.color = color;
         if (typeof newCellStrength !== 'undefined' && newCellStrength <= 0) console.warn("Error in Lifeform_SpreadStrategy constructor: argument to 'newCellStrength' cannot be <= 0. Using value 1.");
         this.newCellStrength = Math.max((newCellStrength || 100), 1);
         if (typeof chance !== 'undefined' && (chance > 1 || chance < 0)) console.warn("Error in Lifeform_SpreadStrategy constructor: argument to 'chance' not in range [0,1]. Closest value inserted.")
@@ -122,7 +117,6 @@ export class Lifeform_SpreadStrategy {
 export default class Lifeform {
 
     name: string;
-    color: Color;
     ticksBetweenGenerations: number;
     spreadStrategies: Lifeform_SpreadStrategy[];
 
@@ -131,9 +125,8 @@ export default class Lifeform {
      * @param color The css color the lifeform should be rendered with
      * @param multiplySpeed The speed at which the lifeform advances to the next generation, where 0 is the default
      */
-    constructor(name:string, color:Color, spreadStrategies:Lifeform_SpreadStrategy[], multiplySpeed: number | undefined) {
+    constructor(name:string, spreadStrategies:Lifeform_SpreadStrategy[], multiplySpeed: number | undefined) {
         this.name = name;
-        this.color = color;
         this.spreadStrategies = spreadStrategies;
         this.ticksBetweenGenerations = TICKS_BETWEEN_GENERATIONS - (multiplySpeed || 0);
     }
