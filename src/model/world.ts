@@ -57,6 +57,11 @@ export default class World {
         this.worldTick++;
     }
 
+    reset() {
+        this.generation = new Positions<Cell>(this);
+        // TODO: could notify the logs that everything was reset
+    }
+
     /**
      * The world in which all the cellular automata resides. 
      * Consists of a (potentially infinite) coordinate plane.

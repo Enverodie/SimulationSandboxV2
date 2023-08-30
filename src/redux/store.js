@@ -3,6 +3,7 @@ import worldSlice from "./simulationSandboxModelSlices/worldSlice";
 import lifeformTemplatesSlice from "./simulationSandboxModelSlices/lifeformTemplatesSlice";
 import lifeformSpreadConditionsSlice from "./simulationSandboxModelSlices/lifeformSpreadConditionsSlice";
 import lifeformSpreadStrategiesSlice from "./simulationSandboxModelSlices/lifeformSpreadStrategiesSlice";
+import activesSlice from "./simulationSandboxModelSlices/activesSlice";
 
 export default configureStore({
     reducer: {
@@ -10,5 +11,6 @@ export default configureStore({
         lifeformTemplatesSlice,
         lifeformSpreadConditionsSlice,
         lifeformSpreadStrategiesSlice,
+        activesSlice,
     }
 })
