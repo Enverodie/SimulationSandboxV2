@@ -28,3 +28,5 @@ export const DEFAULT_COLOR_GRADIENT = [
     {r: 251, g: 7, b: 217},
     {r: 255, g: 0, b: 0},
 ];
+
+export const MAX_BRUSH_SPAN = 50;

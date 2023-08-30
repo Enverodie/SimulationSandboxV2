@@ -50,7 +50,7 @@ export default class Positions<T> {
      * @param x The x coordinate to store the "T" object at
      * @param y The y coordinate to store the "T" object at
      * @param stored The object to store
-     * @returns true if successfully stored, false if position already occupied
+     * @returns true if successfully stored, false if position already occupied or if the position is outside of the world's bounding box
      */
     addPosition(coord:Coordinate, stored: T): boolean {
         if (this.positionIsOccupied(coord)) return false;
