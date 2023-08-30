@@ -7,7 +7,7 @@ export const TICKS_BETWEEN_GENERATIONS = 256;
 export const MIN_WORLD_SPAN = 6;
 export const MAX_WORLD_SPAN = Infinity;
 
-export const DEFAULT_STARTER_STRENGTH = 100;
+export const DEFAULT_LIFEFORM_STRENGTH = 100;
 export const DEFAULT_TIME_TO_SPROUT = 1;
 
 // TODO: implement this boundary

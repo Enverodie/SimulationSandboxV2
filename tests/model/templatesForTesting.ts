@@ -35,6 +35,6 @@ export let complexRange = new ComplexRange()
 
 export let spreadCondition = new Lifeform_SpreadCondition(positions1, complexRange, IgnoreLifeformOptions.NONE);
 
-export let spreadStrategies = [ new Lifeform_SpreadStrategy(spreadCondition, positions2, undefined, undefined, undefined) ];
+export let spreadStrategies = [ new Lifeform_SpreadStrategy(spreadCondition, positions2, undefined, undefined) ];
 
-export let lifeform = new Lifeform("Test lifeform", spreadStrategies, TICKS_BETWEEN_GENERATIONS - 2);
+export let lifeform = new Lifeform("Test lifeform", spreadStrategies, 100, TICKS_BETWEEN_GENERATIONS - 2);

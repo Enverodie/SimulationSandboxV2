@@ -1,4 +1,4 @@
-import { DEFAULT_STARTER_STRENGTH, DEFAULT_TIME_TO_SPROUT } from "./globalVars";
+import { DEFAULT_LIFEFORM_STRENGTH, DEFAULT_TIME_TO_SPROUT } from "./globalVars";
 import Lifeform, { IgnoreLifeformOptions } from "./lifeform";
 import Positions, { Coordinate } from "./positions";
 
@@ -51,7 +51,7 @@ export default class Cell {
                             for (let strategyPosition of strategy.positions.getAllKeys()) {
                                 let newCoordinate = Cell.getCoordinateWithOffset(absoluteNeighborhoodPosition, strategyPosition);
                                 if (stagingArea.getPosition(newCoordinate) === null) stagingArea.addPosition(newCoordinate, []);
-                                (stagingArea.getPosition(newCoordinate) as Cell[]).push(new Cell(this.lifeform, strategy.newCellStrength, strategy.sproutInGenerations));
+                                (stagingArea.getPosition(newCoordinate) as Cell[]).push(new Cell(this.lifeform, this.lifeform.defaultStrength, strategy.sproutInGenerations));
                             }
                         }
                     }
@@ -73,7 +73,7 @@ export default class Cell {
      * @param strength the power the cell has to remain in position until the next generation even with competition
      * @param sproutInGenerations the number of generations to wait before the cell comes to life, where 0 is it will come to life the next chance it gets. Cannot be < 0
      */
-    constructor(lifeform: Lifeform, strength:number = DEFAULT_STARTER_STRENGTH, sproutInGenerations:number = DEFAULT_TIME_TO_SPROUT) {
+    constructor(lifeform: Lifeform, strength:number = lifeform.defaultStrength, sproutInGenerations:number = DEFAULT_TIME_TO_SPROUT) {
         this.lifeform = lifeform;
         this.strength = strength;
         this.ticksUntilNextGeneration = this.lifeform.ticksBetweenGenerations;

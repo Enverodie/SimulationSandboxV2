@@ -16,9 +16,9 @@ describe("cell object static members", () => {
 
 describe("cell object instantiation", () => {
 
-    let cell = new Cell(lifeform, lifeform.spreadStrategies[0].newCellStrength, lifeform.spreadStrategies[0].sproutInGenerations);
-    let cell2 = new Cell(lifeform, lifeform.spreadStrategies[0].newCellStrength, lifeform.spreadStrategies[0].sproutInGenerations);
-    let cell3 = new Cell(lifeform, lifeform.spreadStrategies[0].newCellStrength, lifeform.spreadStrategies[0].sproutInGenerations);
+    let cell = new Cell(lifeform, lifeform.defaultStrength, lifeform.spreadStrategies[0].sproutInGenerations);
+    let cell2 = new Cell(lifeform, lifeform.defaultStrength, lifeform.spreadStrategies[0].sproutInGenerations);
+    let cell3 = new Cell(lifeform, lifeform.defaultStrength, lifeform.spreadStrategies[0].sproutInGenerations);
 
     world1.generation.addPosition({x:0, y:0}, cell);
     world1.generation.addPosition({x:2, y:0}, cell2);
@@ -56,10 +56,10 @@ describe("cell object instantiation", () => {
 
     test("cell properly expands on next generation: values", () => {
         expect(stagingArea.getAllValues()).toEqual([
-            [new Cell(cell.lifeform, cell.lifeform.spreadStrategies[0].newCellStrength, cell.lifeform.spreadStrategies[0].sproutInGenerations)],
-            [new Cell(cell.lifeform, cell.lifeform.spreadStrategies[0].newCellStrength, cell.lifeform.spreadStrategies[0].sproutInGenerations)],
-            [new Cell(cell.lifeform, cell.lifeform.spreadStrategies[0].newCellStrength, cell.lifeform.spreadStrategies[0].sproutInGenerations)],
-            [new Cell(cell.lifeform, cell.lifeform.spreadStrategies[0].newCellStrength, cell.lifeform.spreadStrategies[0].sproutInGenerations)],
+            [new Cell(cell.lifeform, cell.lifeform.defaultStrength, cell.lifeform.spreadStrategies[0].sproutInGenerations)],
+            [new Cell(cell.lifeform, cell.lifeform.defaultStrength, cell.lifeform.spreadStrategies[0].sproutInGenerations)],
+            [new Cell(cell.lifeform, cell.lifeform.defaultStrength, cell.lifeform.spreadStrategies[0].sproutInGenerations)],
+            [new Cell(cell.lifeform, cell.lifeform.defaultStrength, cell.lifeform.spreadStrategies[0].sproutInGenerations)],
         ]);
     });
 

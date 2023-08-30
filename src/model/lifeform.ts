@@ -1,4 +1,4 @@
-import { Equality, TICKS_BETWEEN_GENERATIONS } from "./globalVars";
+import { Equality, TICKS_BETWEEN_GENERATIONS, DEFAULT_LIFEFORM_STRENGTH } from "./globalVars";
 import Positions from "./positions";
 
 
@@ -88,7 +88,6 @@ export class Lifeform_SpreadStrategy {
     
     condition: Lifeform_SpreadCondition;
     positions: Positions<boolean>;
-    newCellStrength: number;
     chance: number;
     sproutInGenerations: number;
     
@@ -101,15 +100,13 @@ export class Lifeform_SpreadStrategy {
      * @param chance the decimal chance a cell will spread to any given position for each position - must be between [0, 1]
      * @param sproutInGenerations the number of this lifeform's generations it takes for the new life to be realized, one is the next generation
      */
-    constructor(condition: Lifeform_SpreadCondition, positions: Positions<boolean>, newCellStrength: number | undefined, chance: number | undefined, sproutInGenerations: number | undefined) {
+    constructor(condition: Lifeform_SpreadCondition, positions: Positions<boolean>, chance: number = 1, sproutInGenerations: number = 0) {
         this.condition = condition;
         this.positions = positions;
-        if (typeof newCellStrength !== 'undefined' && newCellStrength <= 0) console.warn("Error in Lifeform_SpreadStrategy constructor: argument to 'newCellStrength' cannot be <= 0. Using value 1.");
-        this.newCellStrength = Math.max((newCellStrength || 100), 1);
-        if (typeof chance !== 'undefined' && (chance > 1 || chance < 0)) console.warn("Error in Lifeform_SpreadStrategy constructor: argument to 'chance' not in range [0,1]. Closest value inserted.")
-        this.chance = Math.min(Math.max((chance || 1), 0), 1);
-        if (typeof sproutInGenerations !== 'undefined' && (sproutInGenerations < 0)) console.warn("Error in Lifeform_SpreadStrategy constructor: argument to 'sproutInGenerations' not in range [0,n). Closest value inserted.")
-        this.sproutInGenerations = Math.min(Math.round(sproutInGenerations || 0), 0);
+        if (chance > 1 || chance < 0) console.warn("Error in Lifeform_SpreadStrategy constructor: argument to 'chance' not in range [0,1]. Closest value inserted.")
+        this.chance = Math.min(Math.max(chance, 0), 1);
+        if (sproutInGenerations < 0) console.warn("Error in Lifeform_SpreadStrategy constructor: argument to 'sproutInGenerations' not in range [0,n). Closest value inserted.")
+        this.sproutInGenerations = Math.min(Math.round(sproutInGenerations), 0);
     }
     
 };
@@ -119,15 +116,17 @@ export default class Lifeform {
     name: string;
     ticksBetweenGenerations: number;
     spreadStrategies: Lifeform_SpreadStrategy[];
+    defaultStrength: number;
 
     /**
      * @param name The name of the lifeform
      * @param color The css color the lifeform should be rendered with
      * @param multiplySpeed The speed at which the lifeform advances to the next generation, where 0 is the default
      */
-    constructor(name:string, spreadStrategies:Lifeform_SpreadStrategy[], multiplySpeed: number | undefined) {
+    constructor(name:string, spreadStrategies:Lifeform_SpreadStrategy[], defaultStrength: number = DEFAULT_LIFEFORM_STRENGTH, multiplySpeed: number | undefined) {
         this.name = name;
         this.spreadStrategies = spreadStrategies;
+        this.defaultStrength = defaultStrength;
         this.ticksBetweenGenerations = TICKS_BETWEEN_GENERATIONS - (multiplySpeed || 0);
     }
 }

@@ -6,11 +6,11 @@ describe('World initialization test', () => {
     
     test('finite world limit I', () => {
         let world = new World('finiteworld', 10, 10, undefined);
-        let cell1 = new Cell(lifeform, lifeform.spreadStrategies[0].newCellStrength, lifeform.spreadStrategies[0].sproutInGenerations);
-        let cell2 = new Cell(lifeform, lifeform.spreadStrategies[0].newCellStrength, lifeform.spreadStrategies[0].sproutInGenerations);
-        let cell3 = new Cell(lifeform, lifeform.spreadStrategies[0].newCellStrength, lifeform.spreadStrategies[0].sproutInGenerations);
-        let cell4 = new Cell(lifeform, lifeform.spreadStrategies[0].newCellStrength, lifeform.spreadStrategies[0].sproutInGenerations);
-        let cell5 = new Cell(lifeform, lifeform.spreadStrategies[0].newCellStrength, lifeform.spreadStrategies[0].sproutInGenerations);
+        let cell1 = new Cell(lifeform, lifeform.defaultStrength, lifeform.spreadStrategies[0].sproutInGenerations);
+        let cell2 = new Cell(lifeform, lifeform.defaultStrength, lifeform.spreadStrategies[0].sproutInGenerations);
+        let cell3 = new Cell(lifeform, lifeform.defaultStrength, lifeform.spreadStrategies[0].sproutInGenerations);
+        let cell4 = new Cell(lifeform, lifeform.defaultStrength, lifeform.spreadStrategies[0].sproutInGenerations);
+        let cell5 = new Cell(lifeform, lifeform.defaultStrength, lifeform.spreadStrategies[0].sproutInGenerations);
         world.generation.addPosition({x: 0, y: 0}, cell1);
         world.generation.addPosition({x: 0, y: 10}, cell2);
         world.generation.addPosition({x: 0, y: 11}, cell3);
@@ -24,11 +24,11 @@ describe('World initialization test', () => {
 
     test('infinite world limit I', () => {
         let world = new World('finiteworld', undefined, undefined, undefined);
-        let cell1 = new Cell(lifeform, lifeform.spreadStrategies[0].newCellStrength, lifeform.spreadStrategies[0].sproutInGenerations);
-        let cell2 = new Cell(lifeform, lifeform.spreadStrategies[0].newCellStrength, lifeform.spreadStrategies[0].sproutInGenerations);
-        let cell3 = new Cell(lifeform, lifeform.spreadStrategies[0].newCellStrength, lifeform.spreadStrategies[0].sproutInGenerations);
-        let cell4 = new Cell(lifeform, lifeform.spreadStrategies[0].newCellStrength, lifeform.spreadStrategies[0].sproutInGenerations);
-        let cell5 = new Cell(lifeform, lifeform.spreadStrategies[0].newCellStrength, lifeform.spreadStrategies[0].sproutInGenerations);
+        let cell1 = new Cell(lifeform, lifeform.defaultStrength, lifeform.spreadStrategies[0].sproutInGenerations);
+        let cell2 = new Cell(lifeform, lifeform.defaultStrength, lifeform.spreadStrategies[0].sproutInGenerations);
+        let cell3 = new Cell(lifeform, lifeform.defaultStrength, lifeform.spreadStrategies[0].sproutInGenerations);
+        let cell4 = new Cell(lifeform, lifeform.defaultStrength, lifeform.spreadStrategies[0].sproutInGenerations);
+        let cell5 = new Cell(lifeform, lifeform.defaultStrength, lifeform.spreadStrategies[0].sproutInGenerations);
         world.generation.addPosition({x: 0, y: 0}, cell1);
         world.generation.addPosition({x: 0, y: 10}, cell2);
         world.generation.addPosition({x: 0, y: 11}, cell3);
