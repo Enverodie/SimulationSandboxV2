@@ -52,3 +52,12 @@ New life (provide option for templates - 1D + direction, conway's, etc):
     * The way this algorithm works, ignoring other lifeforms DECREASES complexity significantly 
     * by stopping the filtering algorithm if it is a certain type
     */
+
+
+Notes on (my) MVC design:
+* Nothing in the controller should store state
+* The model should only store state relevant to a class's abstraction, nothing related to implementation/deployment
+* Redux should store the majority of, if not all, implementation/deployment state
+* The controller should interact with redux to update implementation state
+* The view should retrieve implementation/deployment state from redux
+* The view should call methods from the controller to update state
