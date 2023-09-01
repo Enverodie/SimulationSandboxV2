@@ -5,9 +5,7 @@ import * as ActivesSliceStuff from '@/redux/simulationSandboxModelSlices/actives
 class ViewportController extends Viewport { 
 
     grab(active:boolean) {
-        let stack = [...store.getState().activesSlice.activeToolsStack];
-        let prevAction = stack.pop();
-        if (active && prevAction !== ActivesSliceStuff.ActiveTool.DRAG) {
+        if (active && ActivesSliceStuff.getPreviousAction() !== ActivesSliceStuff.ActiveTool.DRAG) {
             store.dispatch(ActivesSliceStuff.pushActiveTool(ActivesSliceStuff.ActiveTool.DRAG));
         }
         else if (!active) {
@@ -16,8 +14,7 @@ class ViewportController extends Viewport {
     }
 
     move(deltaX:number, deltaY:number) {
-        let stack = store.getState().activesSlice.activeToolsStack;
-        if (stack[stack.length - 1] === ActivesSliceStuff.ActiveTool.DRAG) {
+        if (ActivesSliceStuff.getPreviousAction() === ActivesSliceStuff.ActiveTool.DRAG) {
             let coord = this.getCoordinate();
             this.setCoordinate({
                 x: coord.x + deltaX,
