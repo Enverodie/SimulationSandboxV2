@@ -1,3 +1,18 @@
+# Simulation Sandbox 
+Version `2.0`
+
+
+This is a Next.js, TypeScript implementation of [Simulation Sandbox](https://github.com/Enverodie/SimulationSandbox).
+
+The structure and interactions between structures within this app is as follows. 
+
+![Project structure](./Simulation%20Sandbox%202%20Code%20Structure.jpg)
+
+Please refer to or update the following [draw.io file](https://app.diagrams.net/#G1lx3RvEgEBq01hfuQWOvGl2hcQd1tG7MT) when expanding the app.
+
+---
+# Auto-generated README from `create-next-app`:
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

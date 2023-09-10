@@ -4,9 +4,13 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const MAX_STACK_SIZE = 5;
 
+// TODO: Will need to add a switch that detects 
+// when the canvas is interacted with and use the 
+// active tool to direct to the appropriate controller & method
 export enum ActiveTool {
     NONE,
     BRUSH,
+    ERASE,
     DRAG,
 }
 
@@ -45,5 +49,11 @@ export const activesSlice = createSlice({
         }
     }
 });
+
+export function getPreviousAction():ActiveTool {
+    let stack = store.getState().activesSlice.activeToolsStack;
+    return stack[stack.length - 1]; 
+}
+
 export const { setActiveWorld, pushActiveTool, popActiveTool } = activesSlice.actions;
 export default activesSlice.reducer;
