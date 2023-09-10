@@ -1,0 +1,29 @@
+Sub-tools for each active tool:
+
+Create/edit life:
+(brings up new "sub-window" over top of original that, when clicked off of, deactivates the tool)
+(sub-window also begins with tooltip that doesn't get displayed again by default, unless ? at bottom gets activated)
+
+
+Add life: / Remove life:
+(same toolkit)
+*Radius: number in range 1-50
+*Shape: shapeoptions[]
+*Texture: textureoptions[]
+Add life:
+*Select lifeform
+
+Grab: / Zoom in: / Zoom out:
+(none)
+
+Save board:
+Load board:
+Clear:
+Screenshot board:
+*Save as .jpg
+Record board: (always top render quality)
+
+Global options:
+*Render quality: enumlist
+*Always show label
+*Set background image (or clear background image)
