@@ -1,8 +1,9 @@
-Sub-tools for each active tool:
+Sub-tools for each active tool: 
 
 Create/edit life:
 (brings up new "sub-window" over top of original that, when clicked off of, deactivates the tool)
 (sub-window also begins with tooltip that doesn't get displayed again by default, unless ? at bottom gets activated)
+* SpreadStrategy
 
 
 Add life: / Remove life:
