@@ -28,7 +28,7 @@ class Viewport {
 
     protected setCoordinateX(newX: number): boolean {
         this.coordinateX = newX;
-        if (world !== null) {
+        if (this.world !== null) {
             this.world = this.world as World;
             this.coordinateX = Math.min(Math.max(this.coordinateX, -this.world.spanX), this.world.spanX);
         } 
@@ -37,7 +37,7 @@ class Viewport {
 
     protected setCoordinateY(newY: number): boolean {
         this.coordinateY = newY;
-        if (world !== null) {
+        if (this.world !== null) {
             this.world = this.world as World;
             this.coordinateY = Math.min(Math.max(this.coordinateY, -this.world.spanY), this.world.spanY);
         }
