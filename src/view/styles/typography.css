@@ -1,0 +1,31 @@
+:root {
+    
+    /*
+    --fontSizeH1: 2.5em;
+    --fontSizeH2: 1.9882em;
+    --fontSizeH3: 1.5811em;
+    --fontSizeH4: 1.2574em;
+    --fontSizeBase: 16px;
+    --fontSizeSmall: .7953em;
+    */
+
+    /* Major second scale */
+    --fontSizeH1: 1.602rem;
+    --fontSizeH2: 1.424rem;
+    --fontSizeH3: 1.266rem;
+    --fontSizeH4: 1.125rem;
+    --fontSizeBase: 16px;
+    --fontSizeSmall: 0.889rem;
+
+    
+    /* base font size */
+    font-size: var(--fontSizeBase);
+
+}
+
+h1 { font-size: var(--fontSizeH1); }
+h2 { font-size: var(--fontSizeH2); }
+h3 { font-size: var(--fontSizeH3); }
+h4 { font-size: var(--fontSizeH4); }
+p { font-size: var(--fontSizeBase); }
+small { font-size: var(--fontSizeSmall); }

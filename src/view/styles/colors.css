@@ -1,0 +1,27 @@
+:root {
+    /* Custom color vars */
+    --darkBlue: #1F2F80;
+    --darkGreyBlue: #454F80;
+    --blue: #314BCC;
+    --lightBlue: #3D5EFF;
+    --lightestBlue: #8A9DFF;
+    
+    --darkYellow: #A38700;
+    --yellow: #F0CB1D;
+
+    --purple: #9747FF;
+    --darkPurple: #501F80;
+    --greyPurple: #4D3B64;
+
+    /* Theme color vars */
+    --mainColorDark1: var(--darkBlue);
+    --mainColorDark2: var(--darkGreyBlue);
+    --mainColorMedium1: var(--blue);
+    --mainColorMedium2: var(--lightBlue);
+    --mainColorLight1: var(--lightestBlue);
+
+    --actionColorDark: var(--darkYellow);
+    --actionColorLight: var(--yellow);
+
+    --placeholderInputColor: var(--purple);
+}

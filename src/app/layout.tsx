@@ -1,10 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import store from '../redux/store';
-import { Provider } from 'react-redux';
-
-const inter = Inter({ subsets: ['latin'] })
+import SimulationSandboxProvider from '@/redux/SimulationSandboxProvider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,9 +14,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Provider store={store}>
-        <body className={inter.className}>{children}</body>
-      </Provider>
+        <body>
+          <SimulationSandboxProvider>
+            {children}
+          </SimulationSandboxProvider>
+        </body>
     </html>
   )
 }
